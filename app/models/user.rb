@@ -15,6 +15,7 @@ class User < ActiveRecord::Base
 
 
   before_save { |user| user.email = email.downcase }
+  before_save :create_remember_token
   #presence: trueで値が入っているかどうかの確認。
   #length: { maximum: 50 }で文字列の長さを設定。
   #
@@ -25,4 +26,8 @@ class User < ActiveRecord::Base
   validates_confirmation_of :password
   validates :password_confirmation, presence: true
 
+  private
+	def create_remember_token
+	  self.remember_token = SecureRandom.urlsafe_base64
+	end
 end
